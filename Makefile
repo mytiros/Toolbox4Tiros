@@ -1,6 +1,6 @@
 FC = gfortran 
 
-SUBROUTINE = Nonequilib.f Thermo.f Evaprate.f Liquiddistrib.f Molweight.f  VLE.f
+SUBROUTINE = subroutine.f
 SUBOBJS = $(SUBROUTINE:.f=.o)
 
 SOURCE = main.f 
