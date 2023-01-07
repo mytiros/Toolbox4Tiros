@@ -1,15 +1,18 @@
-FC = gfortran
+FC = gfortran 
 
-SOURCE = main.f90
-OBJS = $(SOURCE:.f90=.o)
+SUBROUTINE = Nonequilib.f Thermo.f Evaprate.f Liquiddistrib.f Molweight.f  VLE.f
+SUBOBJS = $(SUBROUTINE:.f=.o)
+
+SOURCE = main.f 
+OBJS = $(SOURCE:.f=.o)
 TARGET = main.x
 
-MODSOURCE = constant.f90 calculate.f90
-MODOBJS = $(MODSOURCE:.f90=.o)
-MODS = $(MODSOURCE:.f90=.mod)
+MODSOURCE = Modcom.f 
+MODOBJS = $(MODSOURCE:.f=.o)
+MODS = $(MODSOURCE:.f=.mod)
 
-$(TARGET) : $(OBJS) $(MODOBJS)
-	$(FC) -o $(TARGET) $(OBJS) $(MODOBJS)
+$(TARGET) : $(OBJS) $(SUBOBJS) $(MODOBJS)
+	$(FC) -o $(TARGET) $(OBJS) $(SUBOBJS) $(MODOBJS)
 
 $(OBJS) : $(SOURCE) $(MODS)
 	$(FC) -O -c $<
@@ -17,13 +20,17 @@ $(OBJS) : $(SOURCE) $(MODS)
 $(MODS) $(MODOBJS) : $(MODSOURCE)
 	$(FC) -O -c $^ 
 
+$(SUBOBJS) : $(SUBROUTINE)
+	$(FC) -c $^
+
 # Debug purpose
 all:
 	@echo $(OBJS)
 	@echo $(MODOBJS)
+	@echo $(SUBOBJS)
 
 run:
-	$./$(TARGET)
+	./$(TARGET)
 
 clean:
 	rm *.mod
